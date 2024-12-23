@@ -1,36 +1,233 @@
-I'll explain the content of the README.md file you've provided:
+# Pumpfun King of the Hill Display
 
-The README.md file you've shared is a comprehensive guide for the Duck AI King of the Hill Display project. Let me break it down for you:
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Technology Stack](#technology-stack)
+- [Getting Started](#getting-started)
+- [Component Documentation](#component-documentation)
+- [State Management](#state-management)
+- [API Integration](#api-integration)
+- [Styling Guide](#styling-guide)
+- [Performance Considerations](#performance-considerations)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
 
-1. Title and Table of Contents:
-The title "Duck AI King of the Hill Display" clearly identifies the project. The table of contents provides an organized overview of the document's structure, making it easy for readers to navigate to specific sections of interest.
-2. Introduction:
-This section briefly explains what the project is about. It tells us that it's a React-based web application that displays information about the current "King of the Hill" token and its history. It also mentions that the data is fetched from an API and presented in an interactive and visually appealing way.
-3. Project Structure:
-This section would typically show the directory and file structure of the project. It helps developers understand how the project is organized and where to find specific files or components.
-4. Setup:
-This section would provide instructions on how to set up the project locally. It usually includes steps like cloning the repository, installing dependencies, and starting the development server.
-5. Usage:
-This part explains how to use the application once it's set up and running.
-6. Components:
-This section breaks down the main components of the application:
+## Overview
+The Pumpfun King of the Hill Display is a React-based web application that provides real-time visualization of the current "King of the Hill" token and its historical data. This interactive dashboard allows users to track token ownership changes, view detailed statistics, and analyze historical patterns in an intuitive interface.
 
-1. Home Component: The main component that manages state and data fetching.
-2. DuckDisplay Component: Responsible for displaying detailed information about the current token.
-3. TokenHistory Component: Renders the history of previous tokens.
-Each component's description would typically include its location, key features, and functionality.
+## Features
+- Real-time token status display
+- Historical token ownership tracking
+- Interactive data visualization
+- Responsive design for all device sizes
+- Performance-optimized rendering
+- Automated data refresh
+- Token ownership transition animations
 
+## Technology Stack
+- React 18
+- TypeScript
+- Tailwind CSS
+- ShadcN UI Components
+- Recharts for data visualization
+- React Query for API state management
 
+## Getting Started
 
-7. Data Fetching and State Management:
-This section explains how the application fetches data from the API and manages its state. It would detail the use of hooks like useState and useEffect for these purposes.
-8. Styling:
-This part describes the styling approach used in the project, mentioning the use of Tailwind CSS and any custom styling implemented.
-9. Performance Optimizations:
-The final section outlines the strategies used to optimize the application's performance, such as the use of useMemo to prevent unnecessary re-renders.
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- Git
 
+### Installation
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/pumpfun-king-of-the-hill.git
+cd pumpfun-king-of-the-hill
+```
 
-This README provides a comprehensive overview of the project, serving as both documentation and a guide for developers who might work on or use this application. It's structured to provide both high-level understanding and detailed technical information about the project's implementation.
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-# pumpfun-king-of-the-hill
-# pumpfun-king-of-the-hill
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+Edit `.env.local` with your API credentials and configuration.
+
+4. Start the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
+
+## Component Documentation
+
+### Home Component
+The main container component that manages the application state and layout.
+
+```typescript
+interface HomeProps {
+  refreshInterval?: number;
+  initialData?: TokenData;
+}
+```
+
+Key responsibilities:
+- Global state management
+- Data fetching coordination
+- Layout composition
+- Error boundary implementation
+
+### TokenDisplay Component
+Renders the current token holder's information and status.
+
+```typescript
+interface TokenDisplayProps {
+  token: TokenData;
+  onTokenUpdate: (newToken: TokenData) => void;
+  isLoading?: boolean;
+}
+```
+
+Features:
+- Real-time token status updates
+- Animated transitions
+- Responsive layout
+- Error state handling
+
+### TokenHistory Component
+Displays historical token ownership data and transitions.
+
+```typescript
+interface TokenHistoryProps {
+  history: TokenHistoryEntry[];
+  onHistoryItemClick: (entry: TokenHistoryEntry) => void;
+}
+```
+
+Capabilities:
+- Sortable history entries
+- Filterable by date range
+- Interactive timeline visualization
+- Detailed entry expansion
+
+## State Management
+The application uses a combination of local state and React Query for efficient state management:
+
+```typescript
+// Example of main state hook
+const useTokenState = () => {
+  const [currentToken, setCurrentToken] = useState<TokenData | null>(null);
+  const [history, setHistory] = useState<TokenHistoryEntry[]>([]);
+
+  const { data, isLoading, error } = useQuery('tokenData', fetchTokenData, {
+    refetchInterval: 5000,
+    onSuccess: (data) => {
+      setCurrentToken(data.current);
+      setHistory(data.history);
+    },
+  });
+
+  return { currentToken, history, isLoading, error };
+};
+```
+
+## API Integration
+
+### Endpoints
+- `GET /api/token/current` - Fetch current token status
+- `GET /api/token/history` - Fetch token history
+- `POST /api/token/update` - Update token status
+
+### Error Handling
+The application implements comprehensive error handling:
+- Network errors
+- API response validation
+- Rate limiting
+- Authentication failures
+
+## Styling Guide
+The project uses Tailwind CSS with custom configuration:
+
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'pumpfun-primary': '#4A90E2',
+        'pumpfun-secondary': '#F5A623',
+        'pumpfun-background': '#F8F9FA',
+      },
+      animation: {
+        'token-transition': 'slideIn 0.3s ease-out',
+      },
+    },
+  },
+  plugins: [require('@tailwindcss/forms')],
+};
+```
+
+## Performance Considerations
+
+### Optimization Techniques
+1. Memoization of expensive calculations:
+```typescript
+const memoizedData = useMemo(() => processData(rawData), [rawData]);
+```
+
+2. Virtualized lists for long history displays:
+```typescript
+import { VirtualizedList } from 'react-virtualized';
+```
+
+3. Lazy loading of components:
+```typescript
+const TokenAnalytics = lazy(() => import('./components/TokenAnalytics'));
+```
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+Please ensure your PR adheres to:
+- Consistent code style
+- Test coverage requirements
+- Documentation standards
+
+## Troubleshooting
+
+### Common Issues
+1. Token data not updating
+   - Check API connection
+   - Verify WebSocket connection
+   - Confirm refresh interval settings
+
+2. Performance issues
+   - Check browser console for warnings
+   - Verify network request patterns
+   - Monitor memory usage
+
+3. Styling inconsistencies
+   - Clear browser cache
+   - Rebuild Tailwind styles
+   - Check media query breakpoints
+
+### Debug Mode
+Enable debug mode by setting:
+```javascript
+localStorage.setItem('debug', 'pumpfun:*');
+```
+
+For additional support, please open an issue on the GitHub repository.

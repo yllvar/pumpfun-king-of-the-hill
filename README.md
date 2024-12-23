@@ -1,4 +1,5 @@
 # Pumpfun King of the Hill Display
+<img width="1154" alt="Screenshot 2024-12-23 at 16 27 51" src="https://github.com/user-attachments/assets/78d04075-087f-4574-9ed6-bb6dd4cb558c" />
 
 ## Table of Contents
 - [Overview](#overview)
